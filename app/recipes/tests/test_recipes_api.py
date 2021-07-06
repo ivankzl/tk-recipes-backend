@@ -8,7 +8,7 @@ from core.models import Recipe, Ingredient
 
 from recipes.serializers import RecipeSerializer
 
-RECIPES_URL = reverse('recipe:recipe-list')
+RECIPES_URL = reverse('recipes:recipe-list')
 
 def sample_recipe(**params):
     """Create and return a sample recipe"""
@@ -37,5 +37,3 @@ class RecipesTests(TestCase):
         serializer = RecipeSerializer(recipes, many=True)
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
-        self.assertTemplateNotUsed(res.data, serializer.data)
-
