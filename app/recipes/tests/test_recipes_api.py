@@ -61,6 +61,20 @@ class PublicRecipesApiTest(TestCase):
     def test_create_basic_recipe(self):
         """Test creating a recipe without ingredients"""
 
+        payload = {'name': 'Focaccia', 'description': 'Detailed description'}
+
+        res = self.client.post(RECIPES_URL, payload)
+
+        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
+
+        recipe = Recipe.objects.get(id=res.data['id'])
+
+        self.assertEqual(payload['name'], recipe.name)
+        self.assertEqual(payload['description'], recipe.description)
+
+    def test_create_recipe_with_ingredients(self):
+        """Test creating a recipe with multiple ingredients"""
+
         payload = {
             'name': 'Gnocchi',
             'description': 'A detailed description of a yummy recipe!',
@@ -73,3 +87,38 @@ class PublicRecipesApiTest(TestCase):
 
         res = self.client.post(RECIPES_URL, payload, format='json')
         self.assertEqual(res.status_code, status.HTTP_201_CREATED)
+
+        recipe = Recipe.objects.get(id=res.data['id'])
+
+        self.assertEqual(payload['name'], recipe.name)
+        self.assertEqual(payload['description'], recipe.description)
+
+    def test_partial_update_recipe(self):
+        """Test updating a recipe with patch"""
+        recipe = sample_recipe()
+        payload = {'name': 'Panqueques con dulce de leche'}
+
+        url = recipe_detail_url(recipe.id)
+        res = self.client.patch(url, payload)
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+
+        recipe.refresh_from_db()
+        self.assertEqual(recipe.name, payload['name'])
+
+    def test_full_update_recipe(self):
+        """Test updating a recipe with put"""
+        recipe = sample_recipe()
+        recipe.ingredients.create(name='Eggs')
+
+        payload = {
+            'name': 'Vegan gnocchi',
+            'ingredients': [{'name': 'Vegegg'}]
+        }
+        url = recipe_detail_url(recipe.id)
+        self.client.put(url, payload, format='json')
+
+        recipe.refresh_from_db()
+        self.assertEqual(recipe.name, payload['name'])
+        self.assertEqual(recipe.ingredients.count(), 1)
+
+
