@@ -20,3 +20,11 @@ class RecipeSerializer(serializers.ModelSerializer):
         model = Recipe
         fields = ('id', 'name', 'description', 'ingredients')
         read_only_fields = ('id',)
+
+    def create(self, validated_data):
+        ingredients_data = validated_data.pop('ingredients', [])
+        recipe = Recipe.objects.create(**validated_data)
+
+        for ingredient_data in ingredients_data:
+            Ingredient.objects.create(recipe=recipe, **ingredient_data)
+        return recipe
