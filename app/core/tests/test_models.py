@@ -1,5 +1,3 @@
-from unittest.mock import patch
-
 from django.db import IntegrityError
 from django.test import TestCase
 from core import models

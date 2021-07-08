@@ -96,19 +96,23 @@ class PublicRecipesApiTest(TestCase):
     def test_partial_update_recipe(self):
         """Test updating a recipe with patch"""
         recipe = sample_recipe()
+        original_description = recipe.description
         payload = {'name': 'Panqueques con dulce de leche'}
 
         url = recipe_detail_url(recipe.id)
         res = self.client.patch(url, payload)
-        self.assertEqual(res.status_code, status.HTTP_200_OK)
 
         recipe.refresh_from_db()
+
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(recipe.name, payload['name'])
+        self.assertEqual(recipe.description, original_description)
 
     def test_full_update_recipe(self):
         """Test updating a recipe with put"""
         recipe = sample_recipe()
         recipe.ingredients.create(name='Eggs')
+        original_description = recipe.description
 
         payload = {
             'name': 'Vegan gnocchi',
@@ -119,6 +123,6 @@ class PublicRecipesApiTest(TestCase):
 
         recipe.refresh_from_db()
         self.assertEqual(recipe.name, payload['name'])
+        self.assertEqual(recipe.description, original_description)
         self.assertEqual(recipe.ingredients.count(), 1)
-
-
+        self.assertTrue(recipe.ingredients.first().name, 'Eggs')
