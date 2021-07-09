@@ -26,8 +26,24 @@ class ModelTests(TestCase):
         with self.assertRaises(IntegrityError):
             models.Recipe.objects.create(description='Test description')
 
+    def test_create_ingredient_successful(self):
+        """Test create a new ingredient for a recipe is successful"""
+
+        recipe = sample_recipe()
+        recipe.ingredients.create(name='Butter')
+
+        self.assertEqual(recipe.ingredients.count(), 1)
+
+    def test_create_invalid_ingredient(self):
+        """Test create a new ingredient for a recipe with no name"""
+
+        recipe = sample_recipe()
+
+        with self.assertRaises(IntegrityError):
+            recipe.ingredients.create(name=None)
+
     def test_ingredient_str(self):
-        """Test the ingrediente string representation"""
+        """Test the ingredient string representation"""
         recipe = sample_recipe()
         ingredient = models.Ingredient.objects.create(recipe=recipe, name='Milk')
 
