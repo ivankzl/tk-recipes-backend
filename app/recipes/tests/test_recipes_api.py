@@ -34,7 +34,7 @@ class PublicRecipesApiTest(TestCase):
         self.client = APIClient()
 
     def test_retrieve_recipes(self):
-        """ Test retrieving a list of recipes"""
+        """Test retrieving a list of recipes"""
         sample_recipe()
         sample_recipe()
 
@@ -45,6 +45,22 @@ class PublicRecipesApiTest(TestCase):
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(res.data, serializer.data)
+
+    def test_filter_recipes_by_name(self):
+        """Test retrieving a list of recipes filtering by name substring"""
+        recipe1 = sample_recipe(name='NY cheese cake', description='Test 1')
+        recipe2 = sample_recipe(name='Mac&Cheese', description='Test 2')
+        recipe3 = sample_recipe(name='Meat Empanadas', description='Test 3')
+
+        res = self.client.get(RECIPES_URL, {'name': 'cheese'})
+
+        serializer1 = RecipeSerializer(recipe1)
+        serializer2 = RecipeSerializer(recipe2)
+        serializer3 = RecipeSerializer(recipe3)
+
+        self.assertIn(serializer1.data, res.data)
+        self.assertIn(serializer2.data, res.data)
+        self.assertNotIn(serializer3.data, res.data)
 
     def test_view_recipe_detail(self):
         """Test viewing a recipe detail"""
