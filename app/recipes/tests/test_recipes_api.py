@@ -4,7 +4,7 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
 
-from core.models import Recipe
+from core.models import Recipe, Ingredient
 
 from recipes.serializers import RecipeSerializer
 
@@ -142,3 +142,15 @@ class PublicRecipesApiTest(TestCase):
         self.assertEqual(recipe.description, original_description)
         self.assertEqual(recipe.ingredients.count(), 1)
         self.assertTrue(recipe.ingredients.first().name, 'Eggs')
+
+    def test_recipe_deletion(self):
+        """Test deleting a recipe with DELETE"""
+        recipe = sample_recipe()
+        recipe.ingredients.create(name='Eggs')
+
+        url = recipe_detail_url(recipe.id)
+        res = self.client.delete(url)
+
+        self.assertEqual(res.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(Recipe.objects.count(), 0)
+        self.assertEqual(Ingredient.objects.count(), 0)
