@@ -23,23 +23,23 @@ $ docker-compose up
 Once your docker image is up and running, you can test the API by using Postman, CURL or your favourite tool, sending your requests to the root URL `http://127.0.0.1:8000/`. The available endpoints you can hit are the following:
 
 - List all the recipes
-    - **GET** /api/recipe/recipes/
+    - **GET** /recipes/
 - Filter recipes by name (case insensitive)
-    - **GET** /api/recipe/recipes/?name=`<query>`/
+    - **GET** /recipes/?name=`<query>`/
 - Get a particular recipe by key
-    - **GET** /api/recipe/recipes/`<pk>`/
+    - **GET** /recipes/`<pk>`/
 - Create a new recipe
-    - **POST** /api/recipe/recipes/
+    - **POST** /recipes/
 - Full-edit a recipe
-    - **PATCH** /api/recipe/recipes/`<pk>`/
+    - **PATCH** /recipes/`<pk>`/
 - Partially edit a recipe
-    - **PUT** /api/recipe/recipes/`<pk>`/ 
+    - **PUT** /recipes/`<pk>`/
 - Delete a recipe
-    - **DELETE** /api/recipe/recipes/`<pk>`/
+    - **DELETE** /recipes/`<pk>`/
 
 ### Example: Create a new Recipe
 
-POST /api/recipe/recipes/
+POST /recipes/
 
 Request body:
 
