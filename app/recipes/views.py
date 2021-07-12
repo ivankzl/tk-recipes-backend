@@ -5,15 +5,6 @@ from core.models import Ingredient, Recipe
 
 from recipes import serializers
 
-
-class IngredientViewSet(viewsets.GenericViewSet,
-                        mixins.ListModelMixin,
-                        mixins.CreateModelMixin):
-    """Manage ingredients in the DB"""
-    queryset = Ingredient.objects.all()
-    serializer_class = serializers.IngredientSerializer
-
-
 class RecipeViewSet(viewsets.ModelViewSet):
     """Manage recipe in the DB"""
     queryset = Recipe.objects.all()
