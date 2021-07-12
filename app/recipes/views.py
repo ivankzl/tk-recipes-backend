@@ -5,6 +5,7 @@ from core.models import Ingredient, Recipe
 
 from recipes import serializers
 
+
 class RecipeViewSet(viewsets.ModelViewSet):
     """Manage recipe in the DB"""
     queryset = Recipe.objects.all()
