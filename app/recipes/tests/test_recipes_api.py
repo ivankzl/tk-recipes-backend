@@ -35,8 +35,8 @@ class PublicRecipesApiTest(TestCase):
 
     def test_retrieve_recipes(self):
         """Test retrieving a list of recipes"""
-        sample_recipe()
-        sample_recipe()
+        sample_recipe(name="Avocado toast")
+        sample_recipe(name='Baklava')
 
         res = self.client.get(RECIPES_URL)
 
@@ -44,6 +44,7 @@ class PublicRecipesApiTest(TestCase):
         serializer = RecipeSerializer(recipes, many=True)
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(res.data), 2)
         self.assertEqual(res.data, serializer.data)
 
     def test_filter_recipes_by_name(self):
@@ -58,6 +59,7 @@ class PublicRecipesApiTest(TestCase):
         serializer2 = RecipeSerializer(recipe2)
         serializer3 = RecipeSerializer(recipe3)
 
+        self.assertEqual(len(res.data), 2)
         self.assertIn(serializer1.data, res.data)
         self.assertIn(serializer2.data, res.data)
         self.assertNotIn(serializer3.data, res.data)
@@ -87,6 +89,15 @@ class PublicRecipesApiTest(TestCase):
 
         self.assertEqual(payload['name'], recipe.name)
         self.assertEqual(payload['description'], recipe.description)
+
+    def test_create_basic_recipe_without_name_fails(self):
+        """Test creating a recipe without a name fails"""
+
+        payload = {'name': '', 'description': 'Detailed description'}
+
+        res = self.client.post(RECIPES_URL, payload, format='json')
+
+        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_create_recipe_with_ingredients(self):
         """Test creating a recipe with multiple ingredients"""
