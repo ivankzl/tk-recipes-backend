@@ -20,7 +20,7 @@ class ModelTests(TestCase):
         self.assertEqual(recipe.name, name)
         self.assertEqual(recipe.description, description)
 
-    def test_create_invalid_recipe(self):
+    def test_create_invalid_recipe_fails(self):
         """Test creating a recipe with no name"""
 
         with self.assertRaises(IntegrityError):
@@ -34,7 +34,7 @@ class ModelTests(TestCase):
 
         self.assertEqual(recipe.ingredients.count(), 1)
 
-    def test_create_invalid_ingredient(self):
+    def test_create_invalid_ingredient_fails(self):
         """Test create a new ingredient for a recipe with no name"""
 
         recipe = sample_recipe()
