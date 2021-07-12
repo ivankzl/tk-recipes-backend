@@ -94,7 +94,6 @@ class PublicRecipesApiTest(TestCase):
         """Test creating a recipe without a name fails"""
 
         payload = {'name': '', 'description': 'Detailed description'}
-
         res = self.client.post(RECIPES_URL, payload, format='json')
 
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
@@ -119,6 +118,8 @@ class PublicRecipesApiTest(TestCase):
 
         self.assertEqual(payload['name'], recipe.name)
         self.assertEqual(payload['description'], recipe.description)
+        self.assertEqual(recipe.ingredients.count(), 3)
+        self.assertEqual(recipe.ingredients.first().name, 'Potatoes')
 
     def test_partial_update_recipe(self):
         """Test updating a recipe with patch"""
